@@ -1,4 +1,4 @@
-package com.clementcorporation.stockmarketapp.data.dtos
+package com.clementcorporation.stockmarketapp.data.remote.dtos
 
 data class StockDetailsDto(
     val id: String,

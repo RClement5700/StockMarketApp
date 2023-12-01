@@ -64,34 +64,44 @@ dependencies {
     val retrofitVersion = "2.9.0"
     val roomVersion = "2.6.0"
     val hiltVersion = "1.1.0"
+    val moshiVersion = "1.9.2"
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation ("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
+
+    //Moshi
+    implementation ("com.squareup.moshi:moshi-kotlin:$moshiVersion")
+    implementation("com.squareup.moshi:moshi:$moshiVersion")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    //Desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    // OpenCSV
+    implementation("com.opencsv:opencsv:5.5.2")
+    // Compose Nav Destinations
+    implementation ("io.github.raamcosta.compose-destinations:core:1.1.2-beta")
+    ksp ("io.github.raamcosta.compose-destinations:ksp:1.1.2-beta")
+    // Coil
+    implementation("io.coil-kt:coil-compose:1.4.0")
+    // Accompanist
+    implementation("com.google.accompanist:accompanist-flowlayout:0.17.0")
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.24.2-alpha")
     // Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.48")
     implementation ("androidx.hilt:hilt-navigation-compose:$hiltVersion")
     ksp("androidx.hilt:hilt-compiler:$hiltVersion")
     ksp("com.google.dagger:hilt-android-compiler:2.47")
-    //Desugaring
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-    // OpenCSV
-    implementation("com.opencsv:opencsv:5.5.2")
-    //Destinations
-    implementation("io.github.raamcosta.compose-destinations:core:1.1.2-beta")
-    implementation("io.github.raamcosta.compose-destinations:ksp:1.1.2-beta")
-    // Coil
-    implementation("io.coil-kt:coil-compose:1.4.0")
     // Room
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     // Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$roomVersion")
-
-    implementation("com.google.accompanist:accompanist-flowlayout:0.17.0")
+    //Standard Android Libraries
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")
     implementation ("androidx.compose.material:material:1.5.4")
     implementation ("androidx.navigation:navigation-compose:2.7.5")

@@ -1,7 +1,17 @@
 package com.clementcorporation.stockmarketapp.domain.models
 
+import com.clementcorporation.stockmarketapp.data.local.StockListItemEntity
+
 data class StockListItem(
-    val id: String,
+    val symbol: String,
     val name: String,
-    val symbol: String
+    val exchange: String
 )
+
+fun StockListItem.toStockListItemEntity(): StockListItemEntity {
+    return StockListItemEntity(
+        symbol = symbol,
+        name = name,
+        exchange = exchange
+    )
+}

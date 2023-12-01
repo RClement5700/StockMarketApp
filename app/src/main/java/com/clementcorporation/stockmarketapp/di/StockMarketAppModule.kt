@@ -1,16 +1,20 @@
 package com.clementcorporation.stockmarketapp.di
 
-import com.clementcorporation.stockmarketapp.data.api.StockMarketApi
-import com.clementcorporation.stockmarketapp.data.repositories.StockMarketRepository
-import com.clementcorporation.stockmarketapp.domain.repositories.StockMarketRepositoryImpl
+import android.content.Context
+import androidx.room.Room
+import com.clementcorporation.stockmarketapp.data.local.StockDatabase
+import com.clementcorporation.stockmarketapp.data.remote.api.StockMarketApi
 import com.clementcorporation.stockmarketapp.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -19,16 +23,21 @@ object StockMarketAppModule {
 
     @Provides
     @Singleton
-    fun providesStockMarketRepository(api: StockMarketApi): StockMarketRepository =
-        StockMarketRepositoryImpl(api)
-
+    fun provideAppDatabase(@ApplicationContext appContext: Context): StockDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            StockDatabase::class.java,
+            "stock_database.db"
+        ).build()
+    }
     @Provides
     @Singleton
     fun providesStockMarketApi(): StockMarketApi =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(OkHttpClient())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .client(OkHttpClient.Builder()
+                .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }).build())
             .build()
-            .create(StockMarketApi::class.java)
+            .create()
 }

@@ -2,7 +2,6 @@ package com.clementcorporation.stockmarketapp.data.remote.dtos
 
 import com.clementcorporation.stockmarketapp.data.local.StockListItemEntity
 import com.clementcorporation.stockmarketapp.domain.models.StockListItem
-import retrofit2.http.Field
 
 data class StockItemDto(
     val symbol: String,

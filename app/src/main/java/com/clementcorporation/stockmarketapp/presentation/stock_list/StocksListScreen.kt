@@ -1,6 +1,7 @@
 package com.clementcorporation.stockmarketapp.presentation.stock_list
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -39,7 +41,7 @@ fun StocksListScreen(
         lifecycleOwner = LocalLifecycleOwner.current,
         minActiveState = Lifecycle.State.STARTED,
         context = Dispatchers.IO
-    )
+    ).value
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = viewModel.state.isRefreshing
     )
@@ -50,7 +52,6 @@ fun StocksListScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-
         OutlinedTextField(
             modifier = Modifier
                 .padding(16.dp)
@@ -73,14 +74,14 @@ fun StocksListScreen(
             }
         )
 
-        SwipeRefresh(state = swipeRefreshState, onRefresh = {
+        SwipeRefresh(
+            state = swipeRefreshState, onRefresh = {
             viewModel.onEvent(StocksListScreenEvents.OnRefresh)
         }) {
-            when(screenState.value) {
+            when(screenState) {
                 is StocksListScreenEvents.OnStocksRetrieved -> {
-                    LazyColumn(modifier = Modifier.fillMaxSize()){
-                        (screenState.value as StocksListScreenEvents.OnStocksRetrieved)
-                            .data.let { stocks ->
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        screenState.data.let { stocks ->
                                 items(stocks.size) { index ->
                                     StockListItemUi(stockListItem = stocks[index])
                                     if (index < stocks.size) {
@@ -93,16 +94,22 @@ fun StocksListScreen(
                     }
                 }
                 is StocksListScreenEvents.OnLoading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(48.dp),
-                        color = Color.Blue,
-                        strokeWidth = 4.dp
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(48.dp),
+                            color = Color.Blue,
+                            strokeWidth = 4.dp
+                        )
+                    }
                 }
-                else -> {
-                    val errorMessage = (screenState.value as StocksListScreenEvents.OnStocksFailedToLoad).message
+                is StocksListScreenEvents.OnStocksFailedToLoad -> {
+                    val errorMessage = screenState.message
                     Text(text = errorMessage)
                 }
+                else -> {}
             }
         }
     }

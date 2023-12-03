@@ -8,9 +8,7 @@ import androidx.room.Query
 @Dao
 interface StockDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStockListing(
-        stockListItemEntity: List<StockListItemEntity>
-    )
+    suspend fun insertStockListing(stockListItemEntity: List<StockListItemEntity>)
     @Query("DELETE FROM stocklistitementity")
     suspend fun clearStockListings()
     @Query("SELECT * FROM stocklistitementity WHERE LOWER(name) LIKE '%' || LOWER(:query) || '%' OR UPPER(:query) == symbol")
